@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
 import logo from "../../assets/logo.jpg";
-import { supabase } from "../../database/supabaseconfig";
 import { useAuth } from "../../context/AuthContext";
 
 const Encabezado = () => {
+  const { usuario, logout, tienePermiso } = useAuth();
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); // Para detectar la ruta actual
@@ -19,10 +19,7 @@ const Encabezado = () => {
 
   const cerrarSesion = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-
-      localStorage.removeItem("usuario-supabase");
+      await logout();
       setMostrarMenu(false);
       navigate("/login");
     } catch (err) {
@@ -32,10 +29,8 @@ const Encabezado = () => {
 
   // Detectar rutas especiales
   const esLogin = location.pathname === "/login";
-  const esCatalogo =
-    location.pathname === "/catalogo" &&
-    localStorage.getItem("usuario-supabase") === null;
-
+  const esCatalogoPublico = location.pathname === "/catalogo" && !usuario;
+ 
   // Contenido del menú
   let contenidoMenu;
 
@@ -52,7 +47,7 @@ const Encabezado = () => {
       </Nav>
     );
   } else {
-    if (esCatalogo) {
+    if (esCatalogoPublico) {
       contenidoMenu = (
         <Nav className="ms-auto pe-2">
           <Nav.Link
@@ -76,43 +71,61 @@ const Encabezado = () => {
               <strong>Inicio</strong>
             </Nav.Link>
 
-            <Nav.Link
-              onClick={() => manejarNavegacion("/categorias")}
-              className={mostrarMenu ? "color-texto-marca" : "text-white"}
-            >
-              {mostrarMenu ? <i className="bi-bookmark-fill me-2"></i> : null}
-              <strong>Categorías</strong>
-            </Nav.Link>
+            {tienePermiso("ver_categorias") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/categorias")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                {mostrarMenu ? <i className="bi-bookmark-fill me-2"></i> : null}
+                <strong>Categorías</strong>
+              </Nav.Link>
+            )}
 
-            <Nav.Link
-              onClick={() => manejarNavegacion("/productos")}
-              className={mostrarMenu ? "color-texto-marca" : "text-white"}
-            >
-              {mostrarMenu ? <i className="bi-bag-heart-fill me-2"></i> : null}
-              <strong>Productos</strong>
-            </Nav.Link>
+            {tienePermiso("ver_productos") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/productos")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                {mostrarMenu ? <i className="bi-box-seam-fill me-2"></i> : null}
+                <strong>Productos</strong>
+              </Nav.Link>
+            )}
 
-            <Nav.Link
-              onClick={() => manejarNavegacion("/empleados")}
-              className={mostrarMenu ? "color-texto-marca" : "text-white"}
-            >
-              {mostrarMenu ? <i className="bi-bag-heart-fill me-2"></i> : null}
-              <strong>Empleados</strong>
-            </Nav.Link>
+            {tienePermiso("ver_empleados") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/empleados")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                {mostrarMenu ? <i className="bi-person-badge-fill me-2"></i> : null}
+                <strong>Empleados</strong>
+              </Nav.Link>
+            )}
 
-            <Nav.Link
-              onClick={() => manejarNavegacion("/clientes")}
-              className={mostrarMenu ? "color-texto-marca" : "text-white"}
-            >
-              {mostrarMenu ? <i className="bi-bag-heart-fill me-2"></i> : null}
-              <strong>Clientes</strong>
-            </Nav.Link>
+            {tienePermiso("ver_permisos") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/permisos")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                {mostrarMenu ? <i className="bi-shield-lock-fill me-2"></i> : null}
+                <strong>Permisos</strong>
+              </Nav.Link>
+            )}
+
+            {tienePermiso("ver_clientes") && (
+              <Nav.Link
+                onClick={() => manejarNavegacion("/clientes")}
+                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+              >
+                {mostrarMenu ? <i className="bi-people-fill me-2"></i> : null}
+                <strong>Clientes</strong>
+              </Nav.Link>
+            )}
 
             <Nav.Link
               onClick={() => manejarNavegacion("/catalogo")}
               className={mostrarMenu ? "color-texto-marca" : "text-white"}
             >
-              {mostrarMenu ? <i className="bi-bag-heart-fill me-2"></i> : null}
+              {mostrarMenu ? <i className="bi-images me-2"></i> : null}
               <strong>Catálogo</strong>
             </Nav.Link>
 
@@ -120,7 +133,7 @@ const Encabezado = () => {
             {mostrarMenu ? null : (
               <Nav.Link
                 onClick={cerrarSesion}
-                className={mostrarMenu ? "color-texto-marca" : "text-white"}
+                className="text-white"
               >
                 <i className="bi-box-arrow-right me-2"></i>
               </Nav.Link>
@@ -134,8 +147,7 @@ const Encabezado = () => {
             <div className="mt-3 p-3 rounded bg-light text-dark">
               <p className="mb-2">
                 <i className="bi-envelope-fill me-2"></i>
-                {localStorage.getItem("usuario-supabase")?.toLowerCase() ||
-                  "Usuario"}
+                {usuario?.email?.toLowerCase() || "Usuario"}
               </p>
 
               <button
@@ -161,7 +173,7 @@ const Encabezado = () => {
     >
       <Container>
         <Navbar.Brand
-          onClick={() => manejarNavegacion(esCatalogo ? "/catalogo" : "/")}
+          onClick={() => manejarNavegacion(esCatalogoPublico ? "/catalogo" : "/")}
           className="text-white fw-bold d-flex align-items-center"
           style={{ cursor: "pointer" }}
         >

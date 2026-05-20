@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
 import { supabase } from "../database/supabaseconfig";
+import { useAuth } from "../context/AuthContext";
 import NotificacionOperacion from "../components/NotificacionOperacion";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 import TablaPermisos from "../components/permisos/TablaPermisos";
 import TarjetaPermisos from "../components/permisos/TarjetasPermisos";
-import ModalEdicionPermisos from "../components/permisos/ModalEdicionPermisos";
+import ModalEdicionPermisos from "../components/permisos/ModalEdicionPermisos ";
 
 const Permisos = () => {
+  const { usuario, cargarPermisosActuales } = useAuth();
   const [roles, setRoles] = useState([]);
   const [rolesFiltrados, setRolesFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
@@ -76,6 +78,13 @@ const Permisos = () => {
       if (error) throw error;
 
       await cargarRoles();
+
+      console.log("Rol editado:", rolEditar.rol, "Usuario actual rol:", usuario?.rol);
+      // Si el rol actualizado es el del usuario actual, refrescar contexto
+      if (usuario && rolEditar.rol === usuario.rol) {
+        await cargarPermisosActuales(usuario.rol);
+      }
+
       setMostrarModalEdicion(false);
       setToast({
         mostrar: true,

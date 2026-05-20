@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [permisos, setPermisos] = useState({});
   const [cargando, setCargando] = useState(true);
 
-  const cargarPermisos = async (rol) => {
+  const cargarPermisosActuales = async (rol) => {
     if (!rol) return;
 
     const { data, error } = await supabase
@@ -17,8 +17,7 @@ export const AuthProvider = ({ children }) => {
       .eq("rol", rol)
       .single();
 
-    console.log("Permisos cargados para rol:", rol, data);
-
+    console.log("Cargando permisos para rol:", rol, "Datos recibidos:", data);
     if (error) {
       console.error("Error al cargar permisos:", error);
       return;
@@ -55,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       rol: empleado.tipo_empleado,
     });
 
-    await cargarPermisos(empleado.tipo_empleado);
+    await cargarPermisosActuales(empleado.tipo_empleado);
     return authData;
   };
 
@@ -84,7 +83,7 @@ export const AuthProvider = ({ children }) => {
               email: usuarioGuardado,
               rol: empleado.tipo_empleado,
             });
-            await cargarPermisos(empleado.tipo_empleado);
+            await cargarPermisosActuales(empleado.tipo_empleado);
           } else {
             // Si no se puede obtener el empleado, limpiar sesión
             localStorage.removeItem("usuario-supabase");
@@ -100,7 +99,10 @@ export const AuthProvider = ({ children }) => {
     cargarSesionInicial();
   }, []);
 
-  const tienePermiso = (permiso) => !!permisos[permiso];
+  const tienePermiso = (permiso) => {
+    console.log(`Verificando permiso '${permiso}':`, permisos[permiso], "Todos los permisos:", permisos);
+    return !!permisos[permiso];
+  };
 
   return (
     <AuthContext.Provider
@@ -111,6 +113,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         cargando,
+        cargarPermisosActuales,
       }}
     >
       {children}

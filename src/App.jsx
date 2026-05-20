@@ -11,6 +11,7 @@ import RutaProtegida from "./components/rutas/RutaProtegida";
 import Pagina404 from "./views/Pagina404";
 import Empleados from "./views/Empleados";
 import Clientes from "./views/Clientes";
+import Permisos from "./views/Permisos";
 
 import "./App.css";
 
@@ -34,7 +35,7 @@ const App = () => {
           <Route
             path="/categorias"
             element={
-              <RutaProtegida>
+              <RutaProtegida permiso="ver_categorias">
                 <Categorias />
               </RutaProtegida>
             }
@@ -43,7 +44,7 @@ const App = () => {
           <Route
             path="/productos"
             element={
-              <RutaProtegida>
+              <RutaProtegida permiso="ver_productos">
                 <Productos />
               </RutaProtegida>
             }
@@ -51,8 +52,17 @@ const App = () => {
           <Route
             path="/empleados"
             element={
-              <RutaProtegida>
+              <RutaProtegida permiso="ver_empleados">
                 <Empleados />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/permisos"
+            element={
+              <RutaProtegida permiso="ver_permisos">
+                <Permisos />
               </RutaProtegida>
             }
           />
@@ -60,7 +70,7 @@ const App = () => {
           <Route
             path="/clientes"
             element={
-              <RutaProtegida>
+              <RutaProtegida permiso="ver_clientes">
                 <Clientes />
               </RutaProtegida>
             }
