@@ -9,6 +9,8 @@ import Productos from "./views/Productos";
 import Login from "./views/Login";
 import RutaProtegida from "./components/rutas/RutaProtegida";
 import Pagina404 from "./views/Pagina404";
+import Empleados from "./views/Empleados";
+import Clientes from "./views/Clientes";
 
 import "./App.css";
 
@@ -21,10 +23,48 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
 
-          <Route path="/" element={<RutaProtegida><Inicio /></RutaProtegida>} />
-          <Route path="/categorias" element={<RutaProtegida><Categorias /></RutaProtegida>} />
+          <Route
+            path="/"
+            element={
+              <RutaProtegida>
+                <Inicio />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/categorias"
+            element={
+              <RutaProtegida>
+                <Categorias />
+              </RutaProtegida>
+            }
+          />
           <Route path="/catalogo" element={<Catalogo />} />
-          <Route path="/productos" element={<RutaProtegida><Productos /></RutaProtegida>} />
+          <Route
+            path="/productos"
+            element={
+              <RutaProtegida>
+                <Productos />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/empleados"
+            element={
+              <RutaProtegida>
+                <Empleados />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/clientes"
+            element={
+              <RutaProtegida>
+                <Clientes />
+              </RutaProtegida>
+            }
+          />
 
           <Route path="*" element={<Pagina404 />} />
         </Routes>

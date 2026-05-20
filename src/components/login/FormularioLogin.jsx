@@ -8,6 +8,7 @@ const FormularioLogin = ({
   setUsuario,
   setContrasena,
   iniciarSesion,
+  cargando,
 }) => {
   return (
     <Card
@@ -21,10 +22,10 @@ const FormularioLogin = ({
 
         <Form>
           <Form.Group className="mb-3" controlId="usuario">
-            <Form.Label>Usuario</Form.Label>
+            <Form.Label>Usuario (Email)</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Ingresa tu usuario"
+              type="email"
+              placeholder="ejemplo@discosa.com"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               required
@@ -42,8 +43,13 @@ const FormularioLogin = ({
             />
           </Form.Group>
 
-          <Button variant="primary" className="w-100" onClick={iniciarSesion}>
-            Iniciar Sesión
+          <Button
+            variant="primary"
+            className="w-100"
+            onClick={iniciarSesion}
+            disabled={cargando}
+          >
+            {cargando ? "Iniciando sesión..." : "Iniciar Sesión"}
           </Button>
         </Form>
       </Card.Body>

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-const ModalEliminacionProducto = ({
+const ModalEliminacionCliente = ({
   mostrarModalEliminacion,
   setMostrarModalEliminacion,
-  eliminarProducto,
-  producto,
+  eliminarCliente,
+  cliente,
 }) => {
   const [deshabilitado, setDeshabilitado] = useState(false);
 
@@ -14,7 +14,7 @@ const ModalEliminacionProducto = ({
 
     setDeshabilitado(true);
 
-    await eliminarProducto();
+    await eliminarCliente();
 
     setDeshabilitado(false);
 
@@ -37,7 +37,7 @@ const ModalEliminacionProducto = ({
         <Form>
           <Form.Group>
             <Form.Label>
-              ¿Eliminar producto <strong>{producto?.nombre_producto}</strong>?
+              ¿Eliminar cliente <strong>{cliente?.nombre}</strong>?
             </Form.Label>
           </Form.Group>
         </Form>
@@ -63,4 +63,4 @@ const ModalEliminacionProducto = ({
   );
 };
 
-export default ModalEliminacionProducto;
+export default ModalEliminacionCliente;

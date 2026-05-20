@@ -4,8 +4,8 @@ import { Card, Row, Col, Spinner, Button } from "react-bootstrap";
 
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const TarjetaProducto = ({
-  productos,
+const TarjetaCliente = ({
+  clientes,
   abrirModalEdicion,
   abrirModalEliminacion,
 }) => {
@@ -14,8 +14,8 @@ const TarjetaProducto = ({
   const [idTarjetaActiva, setIdTarjetaActiva] = useState(null);
 
   useEffect(() => {
-    setLoading(!(productos && productos.length >= 0));
-  }, [productos]);
+    setLoading(!(clientes && clientes.length >= 0));
+  }, [clientes]);
 
   const manejarTeclaEscape = useCallback((evento) => {
     if (evento.key === "Escape") {
@@ -31,37 +31,37 @@ const TarjetaProducto = ({
     };
   }, [manejarTeclaEscape]);
 
-  const alternarTarjetaActiva = (id_producto) => {
-    setIdTarjetaActiva((anterior) => (anterior === id_producto ? null : id_producto));
+  const alternarTarjetaActiva = (id) => {
+    setIdTarjetaActiva((anterior) => (anterior === id ? null : id));
   };
 
   return (
     <>
       {loading ? (
         <div className="text-center my-5">
-          <h5>Cargando productos...</h5>
+          <h5>Cargando clientes...</h5>
 
           <Spinner animation="border" variant="success" role="status" />
         </div>
       ) : (
         <div>
-          {productos.map((productos) => {
-            const tarjetaActiva = idTarjetaActiva === productos.id_producto;
+          {clientes.map((cliente) => {
+            const tarjetaActiva = idTarjetaActiva === cliente.id;
 
             return (
               <Card
-                key={productos.id_producto}
+                key={cliente.id}
                 className="mb-3 border-0 rounded-3 shadow-sm w-100 tarjeta-categoria-contenedor"
-                onClick={() => alternarTarjetaActiva(productos.id_producto)}
+                onClick={() => alternarTarjetaActiva(cliente.id)}
                 tabIndex={0}
                 onKeyDown={(evento) => {
                   if (evento.key === "Enter" || evento.key === " ") {
                     evento.preventDefault();
 
-                    alternarTarjetaActiva(productos.id_producto);
+                    alternarTarjetaActiva(cliente.id);
                   }
                 }}
-                aria-label={`Producto ${productos.nombre_producto}`}
+                aria-label={`Cliente ${cliente.nombre}`}
               >
                 <Card.Body
                   className={`p-2 tarjeta-categoria-cuerpo ${
@@ -79,11 +79,11 @@ const TarjetaProducto = ({
 
                     <Col xs={5} className="text-start">
                       <div className="fw-semibold text-truncate">
-                        {productos.nombre_producto}
+                        {cliente.nombre} {cliente.apellido}
                       </div>
 
                       <div className="small text-muted text-truncate">
-                        Producto registrado
+                        Cliente registrado
                       </div>
                     </Col>
 
@@ -91,7 +91,7 @@ const TarjetaProducto = ({
                       xs={5}
                       className="d-flex flex-column align-items-end justify-content-center text-end"
                     >
-                      <div className="fw-semibold small">${productos.precio_venta.toFixed(2)}</div>
+                      <div className="fw-semibold small">{cliente.celular}</div>
                     </Col>
                   </Row>
                 </Card.Body>
@@ -115,11 +115,11 @@ const TarjetaProducto = ({
                         variant="outline-warning"
                         size="sm"
                         onClick={() => {
-                          abrirModalEdicion(productos);
+                          abrirModalEdicion(cliente);
 
                           setIdTarjetaActiva(null);
                         }}
-                        aria-label={`Editar ${productos.nombre_producto}`}
+                        aria-label={`Editar ${cliente.nombre}`}
                       >
                         <i className="bi bi-pencil"></i>
                       </Button>
@@ -128,11 +128,11 @@ const TarjetaProducto = ({
                         variant="outline-danger"
                         size="sm"
                         onClick={() => {
-                          abrirModalEliminacion(productos);
+                          abrirModalEliminacion(cliente);
 
                           setIdTarjetaActiva(null);
                         }}
-                        aria-label={`Eliminar ${productos.nombre_producto}`}
+                        aria-label={`Eliminar ${cliente.nombre}`}
                       >
                         <i className="bi bi-trash"></i>
                       </Button>
@@ -148,4 +148,4 @@ const TarjetaProducto = ({
   );
 };
 
-export default TarjetaProducto;
+export default TarjetaCliente;

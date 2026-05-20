@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
 import logo from "../../assets/logo.jpg";
 import { supabase } from "../../database/supabaseconfig";
+import { useAuth } from "../../context/AuthContext";
 
 const Encabezado = () => {
   const [mostrarMenu, setMostrarMenu] = useState(false);
@@ -91,6 +92,30 @@ const Encabezado = () => {
               <strong>Productos</strong>
             </Nav.Link>
 
+            <Nav.Link
+              onClick={() => manejarNavegacion("/empleados")}
+              className={mostrarMenu ? "color-texto-marca" : "text-white"}
+            >
+              {mostrarMenu ? <i className="bi-bag-heart-fill me-2"></i> : null}
+              <strong>Empleados</strong>
+            </Nav.Link>
+
+            <Nav.Link
+              onClick={() => manejarNavegacion("/clientes")}
+              className={mostrarMenu ? "color-texto-marca" : "text-white"}
+            >
+              {mostrarMenu ? <i className="bi-bag-heart-fill me-2"></i> : null}
+              <strong>Clientes</strong>
+            </Nav.Link>
+
+            <Nav.Link
+              onClick={() => manejarNavegacion("/catalogo")}
+              className={mostrarMenu ? "color-texto-marca" : "text-white"}
+            >
+              {mostrarMenu ? <i className="bi-bag-heart-fill me-2"></i> : null}
+              <strong>Catálogo</strong>
+            </Nav.Link>
+
             {/* Ícono cerrar sesión en barra superior */}
             {mostrarMenu ? null : (
               <Nav.Link
@@ -128,7 +153,12 @@ const Encabezado = () => {
   }
 
   return (
-    <Navbar expand="md" fixed="top" className="color-navbar shadow-lg" variant="dark">
+    <Navbar
+      expand="md"
+      fixed="top"
+      className="color-navbar shadow-lg"
+      variant="dark"
+    >
       <Container>
         <Navbar.Brand
           onClick={() => manejarNavegacion(esCatalogo ? "/catalogo" : "/")}
@@ -166,9 +196,7 @@ const Encabezado = () => {
             <Offcanvas.Title>Menú Discosa</Offcanvas.Title>
           </Offcanvas.Header>
 
-          <Offcanvas.Body>
-            {contenidoMenu}
-          </Offcanvas.Body>
+          <Offcanvas.Body>{contenidoMenu}</Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>
     </Navbar>

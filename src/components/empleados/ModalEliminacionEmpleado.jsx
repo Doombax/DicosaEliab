@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-const ModalEliminacionProducto = ({
+const ModalEliminacionEmpleado = ({
   mostrarModalEliminacion,
   setMostrarModalEliminacion,
-  eliminarProducto,
-  producto,
+  eliminarEmpleado,
+  empleado,
 }) => {
   const [deshabilitado, setDeshabilitado] = useState(false);
 
@@ -14,7 +14,7 @@ const ModalEliminacionProducto = ({
 
     setDeshabilitado(true);
 
-    await eliminarProducto();
+    await eliminarEmpleado();
 
     setDeshabilitado(false);
 
@@ -30,14 +30,17 @@ const ModalEliminacionProducto = ({
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>Confirmar Eliminación</Modal.Title>
+        <Modal.Title>
+          Confirmar Eliminación
+        </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <Form>
           <Form.Group>
             <Form.Label>
-              ¿Eliminar producto <strong>{producto?.nombre_producto}</strong>?
+              ¿Eliminar empleado{" "}
+              <strong>{empleado?.nombre}</strong>?
             </Form.Label>
           </Form.Group>
         </Form>
@@ -46,7 +49,9 @@ const ModalEliminacionProducto = ({
       <Modal.Footer>
         <Button
           variant="secondary"
-          onClick={() => setMostrarModalEliminacion(false)}
+          onClick={() =>
+            setMostrarModalEliminacion(false)
+          }
         >
           Cancelar
         </Button>
@@ -56,11 +61,13 @@ const ModalEliminacionProducto = ({
           onClick={handleEliminar}
           disabled={deshabilitado}
         >
-          {deshabilitado ? "Eliminando..." : "Eliminar"}
+          {deshabilitado
+            ? "Eliminando..."
+            : "Eliminar"}
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-export default ModalEliminacionProducto;
+export default ModalEliminacionEmpleado;

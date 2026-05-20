@@ -44,7 +44,6 @@ const categoriasPaginadas = categoriasFiltradas.slice(
   paginaActual * registrosPorPagina
 );
 
-
   // 👉 Funciones para abrir modales
   const abrirModalEdicion = (categoria) => {
     setCategoriaEditar({
