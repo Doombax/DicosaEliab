@@ -8,6 +8,7 @@ const TarjetaProducto = ({
   productos,
   abrirModalEdicion,
   abrirModalEliminacion,
+  generarPDFProducto,
 }) => {
   const [loading, setLoading] = useState(true);
 
@@ -107,6 +108,18 @@ const TarjetaProducto = ({
                       }}
                     >
                       Eliminar
+                    </Button>
+
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      className="ms-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        generarPDFProducto(producto);
+                      }}
+                    >
+                      <i className="bi bi-file-earmark-pdf"></i>
                     </Button>
                   </Col>
                 </Row>

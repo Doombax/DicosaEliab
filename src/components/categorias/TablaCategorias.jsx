@@ -3,7 +3,7 @@ import { Table, Spinner, Button } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 
-const TablaCategorias = ({ categorias, abrirModalEdicion, abrirModalEliminacion }) => {
+const TablaCategorias = ({ categorias, abrirModalEdicion, abrirModalEliminacion, generarPDFCategoria }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,6 +59,14 @@ const TablaCategorias = ({ categorias, abrirModalEdicion, abrirModalEliminacion 
                       onClick={() => abrirModalEliminacion(categoria)}
                     >
                       <i className="bi bi-trash"></i>
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      className="m-1"
+                      onClick={() => generarPDFCategoria(categoria)}
+                    >
+                      <i className="bi bi-file-earmark-pdf"></i>
                     </Button>
                   </td>
                 </tr>

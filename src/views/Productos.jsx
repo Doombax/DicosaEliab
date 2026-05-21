@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { supabase } from "../database/supabaseconfig";
 
 import ModalRegistroProducto from "../components/productos/ModalRegistroProducto";
@@ -309,6 +311,48 @@ const Productos = () => {
     }
   };
 
+  // 👉 Método para generar PDF de un producto con imagen
+  const generarPDFProducto = async (producto) => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Reporte de Producto", 14, 20);
+    doc.line(14, 25, 195, 25);
+
+    let yPos = 35;
+
+    // Lógica para incluir la imagen si existe
+    if (producto.url_imagen) {
+      try {
+        const img = new Image();
+        img.src = producto.url_imagen;
+        img.crossOrigin = "Anonymous"; // Evita problemas de CORS
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+        doc.addImage(img, "JPEG", 14, 35, 45, 45);
+        yPos = 85; // Mueve la tabla hacia abajo para que no se encime con la imagen
+      } catch (error) {
+        console.error("Error cargando la imagen para el PDF:", error);
+      }
+    }
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [["Atributo", "Descripción"]],
+      body: [
+        ["ID", producto.id_producto],
+        ["Nombre", producto.nombre_producto],
+        ["Descripción", producto.descripcion_producto || "Sin descripción"],
+        ["Precio de Venta", `$${Number(producto.precio_venta).toFixed(2)}`],
+      ],
+      headStyles: { fillColor: [25, 135, 84] }, // Verde success
+    });
+
+    doc.save(`producto_${producto.id_producto}.pdf`);
+  };
+
   return (
     <Container className="mt-4">
       <Row className="mb-3">
@@ -338,6 +382,7 @@ const Productos = () => {
             productos={productosFiltrados}
             abrirModalEdicion={abrirModalEdicion}
             abrirModalEliminacion={abrirModalEliminacion}
+            generarPDFProducto={generarPDFProducto}
           />
         </Col>
       </Row>

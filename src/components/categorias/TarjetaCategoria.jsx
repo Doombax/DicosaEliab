@@ -6,6 +6,7 @@ const TarjetaCategoria = ({
   categorias,
   abrirModalEdicion,
   abrirModalEliminacion,
+  generarPDFCategoria,
 }) => {
   const [loading, setLoading] = useState(true);
   const [idTarjetaActiva, setIdTarjetaActiva] = useState(null);
@@ -121,6 +122,17 @@ const TarjetaCategoria = ({
                         aria-label={`Eliminar ${categoria.nombre_categoria}`}
                       >
                         <i className="bi bi-trash"></i>
+                      </Button>
+
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={() => {
+                          generarPDFCategoria(categoria);
+                          setIdTarjetaActiva(null);
+                        }}
+                      >
+                        <i className="bi bi-file-earmark-pdf"></i>
                       </Button>
                     </div>
                   </div>
